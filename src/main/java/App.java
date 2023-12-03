@@ -1,7 +1,10 @@
-import org.thd.Forms.FormLogin;
+import org.thd.Controllers.AccountController;
+import org.thd.Models.Account;
+import org.thd.Views.FormLogin;
 
 public class App {
     public static void main(String[] args) {
-        FormLogin formLogin = new FormLogin();
+        FormLogin f = new FormLogin();
+        f.setVisible(true);
     }
 }
