@@ -35,15 +35,17 @@ public class FormLogin extends JFrame{
                 if (authenticatedAccount != null) {
                     String userRole = authenticatedAccount.getRole();
                     JOptionPane.showMessageDialog(FormLogin.this, "Login successful! User role: " + userRole);
+                    new FormMain(authenticatedAccount).setVisible(true);
 
-
-                    if ("admin".equals(userRole)) {
-
-                    } else if ("manager".equals(userRole)) {
-
-                    } else if ("employee".equals(userRole)) {
-
-                    }
+//                    if ("Admin".equals(userRole)) {
+//
+//
+//                    } else if ("manager".equals(userRole)) {
+//
+//
+//                    } else if ("employee".equals(userRole)) {
+//
+//                    }
 
                     dispose();
                 } else {
