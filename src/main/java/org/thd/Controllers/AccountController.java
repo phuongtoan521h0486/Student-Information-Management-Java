@@ -33,6 +33,10 @@ public class AccountController {
         return accountDAO.delete(accountId);
     }
 
+    public Account getAccountByUsername(String username) {
+        return accountDAO.getAccountByUsername(username);
+    }
+
     public Account authenticateUser(String username, String password) {
         Account authenticatedAccount = accountDAO.getAccountByUsername(username);
 
@@ -42,7 +46,6 @@ public class AccountController {
 
         return null;
     }
-
     private boolean checkPassword(String enteredPassword, String hashedPassword) {
         return BCrypt.checkpw(enteredPassword, hashedPassword);
     }
