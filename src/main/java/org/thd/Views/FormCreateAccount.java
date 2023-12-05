@@ -3,13 +3,17 @@ package org.thd.Views;
 import org.thd.Controllers.AccountController;
 import org.thd.Models.Account;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.nio.file.Files;
 
 public class FormCreateAccount extends JFrame{
@@ -36,6 +40,7 @@ public class FormCreateAccount extends JFrame{
         setLocationRelativeTo(null);
 
         accountController = new AccountController();
+
         buttonUpload.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -45,12 +50,25 @@ public class FormCreateAccount extends JFrame{
         addButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                if (pictureData == null) {
+                    BufferedImage img = null;
+                    try {
+                        ClassLoader classLoader = getClass().getClassLoader();
+                        URL resource = classLoader.getResource("static/images/default.png");
+                        img = ImageIO.read(resource);
+                        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                        ImageIO.write(img, "jpg", bos );
+                        pictureData = bos.toByteArray();
+                    } catch (IOException error) {
+                        error.printStackTrace();
+                    }
+                }
                 createNewAccount();
             }
         });
 
         add(panelMain);
+
     }
 
     private void showFileChooser() {
@@ -79,7 +97,6 @@ public class FormCreateAccount extends JFrame{
     private void displayImage(File file) {
         ImageIcon imageIcon = new ImageIcon(file.getAbsolutePath());
         Image image = imageIcon.getImage().getScaledInstance(pictureUpload.getWidth(), pictureUpload.getHeight(), Image.SCALE_SMOOTH);
-
         pictureUpload.setIcon(new ImageIcon(image));
     }
 
@@ -127,7 +144,7 @@ public class FormCreateAccount extends JFrame{
             return;
         }
 
-        Account newAccount = new Account(username, password, role,pictureData, name, age, phoneNumber, true);
+        Account newAccount = new Account(username, password, role, pictureData, name, age, phoneNumber, true);
 
         Integer accountId = accountController.addAccount(newAccount);
 

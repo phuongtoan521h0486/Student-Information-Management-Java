@@ -34,10 +34,13 @@ public class FormUserSystem extends JFrame{
         tableListUser.getColumnModel().getColumn(0).setCellRenderer(new ImageRenderer());
 
         add(panelMain);
+
+
         buttonAdd.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // mo form create account len
+                new FormCreateAccount().setVisible(true);
+                dispose();
             }
         });
     }

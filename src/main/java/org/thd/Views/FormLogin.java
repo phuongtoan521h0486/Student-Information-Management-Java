@@ -23,6 +23,7 @@ public class FormLogin extends JFrame{
 
         // Initialize the AccountController
         accountController = new AccountController();
+
         buttonLogin.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -54,5 +55,6 @@ public class FormLogin extends JFrame{
             }
         });
         add(panelMain);
+
     }
 }

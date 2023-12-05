@@ -6,6 +6,8 @@ import org.thd.Models.Account;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -34,13 +36,23 @@ public class FormMain extends JFrame{
             throw new RuntimeException(e);
         }
 
+        if (!user.getRole().equals("Admin")) {
+            buttonUser.setVisible(false);
+        }
 
         setTitle("Main Form");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(1080, 720);
         setLocationRelativeTo(null);
-
         add(panelMain);
+
+        buttonUser.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new FormUserSystem().setVisible(true);
+                dispose();
+            }
+        });
     }
 
 }
