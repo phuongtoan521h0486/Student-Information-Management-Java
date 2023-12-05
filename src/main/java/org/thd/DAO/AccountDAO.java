@@ -42,7 +42,7 @@ public class AccountDAO implements Repository<Account, Integer> {
             }
 
         } catch (SQLException e) {
-            e.printStackTrace(); // Handle the exception appropriately
+            e.printStackTrace();
             return null;
         }
     }
@@ -61,10 +61,22 @@ public class AccountDAO implements Repository<Account, Integer> {
             }
 
         } catch (SQLException e) {
-            e.printStackTrace(); // Handle the exception appropriately
+            e.printStackTrace();
         }
 
         return accounts;
+    }
+    public ResultSet readAllResultSet() {
+        try (Connection connection = DBConnection.getConnection();
+             Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery("SELECT * FROM accounts")) {
+
+            return resultSet;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     @Override
@@ -81,7 +93,26 @@ public class AccountDAO implements Repository<Account, Integer> {
             }
 
         } catch (SQLException e) {
-            e.printStackTrace(); // Handle the exception appropriately
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public ResultSet readResultset(Integer id) {
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM accounts WHERE id=?")) {
+
+            preparedStatement.setInt(1, id);
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    return resultSet;
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
 
         return null;
@@ -107,7 +138,7 @@ public class AccountDAO implements Repository<Account, Integer> {
             return rowsAffected > 0;
 
         } catch (SQLException e) {
-            e.printStackTrace(); // Handle the exception appropriately
+            e.printStackTrace();
             return false;
         }
     }
@@ -123,7 +154,7 @@ public class AccountDAO implements Repository<Account, Integer> {
             return rowsAffected > 0;
 
         } catch (SQLException e) {
-            e.printStackTrace(); // Handle the exception appropriately
+            e.printStackTrace();
             return false;
         }
     }
@@ -140,7 +171,7 @@ public class AccountDAO implements Repository<Account, Integer> {
             return rowsAffected > 0;
 
         } catch (SQLException e) {
-            e.printStackTrace(); // Handle the exception appropriately
+            e.printStackTrace();
             return false;
         }
     }

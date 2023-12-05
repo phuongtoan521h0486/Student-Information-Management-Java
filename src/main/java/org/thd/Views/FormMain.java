@@ -16,6 +16,7 @@ public class FormMain extends JFrame{
     private JLabel displayName;
     private JButton buttonHome;
     private JButton buttonUser;
+    private JButton buttonStudent;
 
     private Account user;
     private AccountController accountController;

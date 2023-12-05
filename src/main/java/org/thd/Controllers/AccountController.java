@@ -4,6 +4,7 @@ import org.mindrot.jbcrypt.BCrypt;
 import org.thd.DAO.AccountDAO;
 import org.thd.Models.Account;
 
+import java.sql.ResultSet;
 import java.util.List;
 
 public class AccountController {
@@ -21,8 +22,16 @@ public class AccountController {
         return accountDAO.readAll();
     }
 
+    public ResultSet getAllAccountsResultSet() {
+        return accountDAO.readAllResultSet();
+    }
+
     public Account getAccountById(Integer accountId) {
         return accountDAO.read(accountId);
+    }
+
+    public ResultSet getAccountByIdResultSet(Integer accountId) {
+        return accountDAO.readResultset(accountId);
     }
 
     public boolean updateAccount(Account account) {
