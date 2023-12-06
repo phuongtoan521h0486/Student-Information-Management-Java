@@ -1,4 +1,4 @@
-package org.thd.Views;
+package org.thd.Views.Home;
 
 import org.thd.Controllers.AccountController;
 import org.thd.Models.Account;
@@ -21,7 +21,6 @@ public class FormLogin extends JFrame{
         setSize(450, 400);
         setLocationRelativeTo(null);
 
-        // Initialize the AccountController
         accountController = new AccountController();
 
         buttonLogin.addActionListener(new ActionListener() {
@@ -37,16 +36,6 @@ public class FormLogin extends JFrame{
                     String userRole = authenticatedAccount.getRole();
                     JOptionPane.showMessageDialog(FormLogin.this, "Login successful! User role: " + userRole);
                     new FormMain(authenticatedAccount).setVisible(true);
-
-//                    if ("Admin".equals(userRole)) {
-//
-//
-//                    } else if ("manager".equals(userRole)) {
-//
-//
-//                    } else if ("employee".equals(userRole)) {
-//
-//                    }
 
                     dispose();
                 } else {

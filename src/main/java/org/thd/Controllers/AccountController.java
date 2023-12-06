@@ -46,6 +46,10 @@ public class AccountController {
         return accountDAO.getAccountByUsername(username);
     }
 
+    public boolean updatePicture(Integer id, byte[] newPicture) {
+        return accountDAO.updatePicture(id, newPicture);
+    }
+
     public Account authenticateUser(String username, String password) {
         Account authenticatedAccount = accountDAO.getAccountByUsername(username);
 

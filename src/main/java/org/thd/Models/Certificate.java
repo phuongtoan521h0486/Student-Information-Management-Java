@@ -7,6 +7,6 @@ public class Certificate {
     private String name;
     private int score;
     private Date date;
-
-    // chua lam gi ht
+    private String studentId;
+    // chua lam gi
 }

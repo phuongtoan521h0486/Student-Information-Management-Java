@@ -4,17 +4,16 @@ import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import java.util.List;
 
-public class TableAccountModel extends AbstractTableModel {
-    private List<Account> accountList;
-    private String[] columnNames = {"Picture", "Role", "Name", "Age", "Phone Number", "Status"};
+public class StudentTableModel extends AbstractTableModel {
+    private List<Student> students;
+    private String[] columnNames = {"Image", "Student ID", "Email", "Name", "Gender", "Major"};
 
-    public TableAccountModel(List<Account> accountList) {
-        this.accountList = accountList;
+    public StudentTableModel(List<Student> students) {
+        this.students = students;
     }
-
     @Override
     public int getRowCount() {
-        return accountList.size();
+        return students.size();
     }
 
     @Override
@@ -24,21 +23,21 @@ public class TableAccountModel extends AbstractTableModel {
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-        Account account = accountList.get(rowIndex);
+        Student student = students.get(rowIndex);
 
         switch (columnIndex) {
             case 0:
-                return byteArrayToImageIcon(account.getPicture());
+                return byteArrayToImageIcon(student.getPicture());
             case 1:
-                return account.getRole();
+                return student.getStudentId();
             case 2:
-                return account.getName();
+                return student.getEmail();
             case 3:
-                return account.getAge();
+                return student.getName();
             case 4:
-                return account.getPhoneNumber();
+                return student.isGender() ? "Male": "Female";
             case 5:
-                return account.isStatus() ? "Normal": "Locked";
+                return student.getMajor();
             default:
                 return null;
         }
@@ -57,3 +56,5 @@ public class TableAccountModel extends AbstractTableModel {
         }
     }
 }
+
+

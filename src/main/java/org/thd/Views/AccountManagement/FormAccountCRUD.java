@@ -1,7 +1,8 @@
-package org.thd.Views;
+package org.thd.Views.AccountManagement;
 
 import org.thd.Controllers.AccountController;
 import org.thd.Models.Account;
+import org.thd.Models.AccountTableModel;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -16,7 +17,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
 
-public class FormCreateAccount extends JFrame{
+public class FormAccountCRUD extends JFrame{
     private JPanel panelMain;
     private JButton buttonUpload;
     private JTextField textFieldName;
@@ -26,20 +27,27 @@ public class FormCreateAccount extends JFrame{
     private JTextField textFieldAge;
     private JTextField textFieldPhoneNumber;
     private JButton addButton;
-    private JTable table1;
+    private JTable tableAccount;
     private JLabel pictureUpload;
     private JPasswordField passwordFieldConfirm;
+    private JButton saveButton;
+    private JButton deleteButton;
+    private JButton editButton;
+    private JButton lockButton;
+    private JButton backButton;
 
     private AccountController accountController;
     private byte[] pictureData;
 
-    public FormCreateAccount() {
-        setTitle("Create Account Form");
+    public FormAccountCRUD() {
+        setTitle("Account Management Form");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(1080, 720);
         setLocationRelativeTo(null);
 
         accountController = new AccountController();
+        AccountTableModel model = new AccountTableModel(accountController.getAllAccounts());
+        tableAccount.setModel(model);
 
         buttonUpload.addActionListener(new ActionListener() {
             @Override
@@ -154,6 +162,9 @@ public class FormCreateAccount extends JFrame{
         } else {
             JOptionPane.showMessageDialog(this, "Failed to create account.", "Error", JOptionPane.ERROR_MESSAGE);
         }
+
+        AccountTableModel model = new AccountTableModel(accountController.getAllAccounts());
+        tableAccount.setModel(model);
     }
 
     private void clearForm() {
@@ -164,6 +175,11 @@ public class FormCreateAccount extends JFrame{
         textFieldName.setText("");
         textFieldAge.setText("");
         textFieldPhoneNumber.setText("");
-
+        try {
+            BufferedImage img = ImageIO.read(new File("static/images/default.png"));
+            pictureUpload.setIcon(new ImageIcon(img.getScaledInstance(150, 150, Image.SCALE_DEFAULT)));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
