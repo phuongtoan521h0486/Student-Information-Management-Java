@@ -32,14 +32,17 @@ public class FormLogin extends JFrame{
                 // Authenticate user
                 Account authenticatedAccount = accountController.authenticateUser(username, password);
 
-                if (authenticatedAccount != null) {
-                    String userRole = authenticatedAccount.getRole();
-                    JOptionPane.showMessageDialog(FormLogin.this, "Login successful! User role: " + userRole);
-                    new FormMain(authenticatedAccount).setVisible(true);
-
-                    dispose();
+                if (!authenticatedAccount.isStatus()) {
+                    JOptionPane.showMessageDialog(FormLogin.this, "Login failed. Your account is disabled by admin.");
                 } else {
-                    JOptionPane.showMessageDialog(FormLogin.this, "Login failed. Invalid username or password.");
+                    if (authenticatedAccount != null) {
+                        String userRole = authenticatedAccount.getRole();
+                        JOptionPane.showMessageDialog(FormLogin.this, "Login successful! User role: " + userRole);
+                        new FormMain(authenticatedAccount).setVisible(true);
+                        dispose();
+                    } else {
+                        JOptionPane.showMessageDialog(FormLogin.this, "Login failed. Invalid username or password.");
+                    }
                 }
             }
         });

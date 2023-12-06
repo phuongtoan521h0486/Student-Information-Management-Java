@@ -3,13 +3,17 @@ package org.thd.Views.AccountManagement;
 import org.thd.Controllers.AccountController;
 import org.thd.Models.Account;
 import org.thd.Models.AccountTableModel;
+import org.thd.Views.StudentManagement.FormStudentManagement;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ContainerAdapter;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -49,6 +53,28 @@ public class FormAccountCRUD extends JFrame{
         AccountTableModel model = new AccountTableModel(accountController.getAllAccounts());
         tableAccount.setModel(model);
 
+        tableAccount.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+
+                if (tableAccount.getSelectedRow() != -1) {
+                    String status = String.valueOf(tableAccount.getValueAt(tableAccount.getSelectedRow(), 3));
+                    if (status.equals("Locked")) {
+                        lockButton.setText("enable");
+                    } else {
+                        lockButton.setText("lock");
+                    }
+
+                    textFieldUsername.setText("");
+                    comboBoxRole.setSelectedIndex(0);
+                    textFieldName.setText("");
+                    textFieldAge.setText("");
+                    textFieldPhoneNumber.setText("");
+                }
+            }
+        });
+
+
         buttonUpload.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -75,8 +101,57 @@ public class FormAccountCRUD extends JFrame{
             }
         });
 
-        add(panelMain);
+        backButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new FormUserSystem().setVisible(true);
+                dispose();
+            }
+        });
 
+        add(panelMain);
+        deleteButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int row = tableAccount.getSelectedRow();
+                if (row == -1) {
+                    JOptionPane.showMessageDialog(FormAccountCRUD.this, "Please chose an account you want to delete", "Error", JOptionPane.ERROR_MESSAGE);
+                } else {
+                    int confirm = JOptionPane.showConfirmDialog(FormAccountCRUD.this, "You want to delete this user");
+                    if (confirm == JOptionPane.YES_OPTION) {
+                        int userID = Integer.parseInt(String.valueOf(tableAccount.getValueAt(row, 0)));
+                        accountController.deleteAccount(userID);
+                        AccountTableModel model = new AccountTableModel(accountController.getAllAccounts());
+                        tableAccount.setModel(model);
+                    }
+                }
+            }
+        });
+        lockButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int row = tableAccount.getSelectedRow();
+                if (row == -1) {
+                    JOptionPane.showMessageDialog(FormAccountCRUD.this, "Please chose an account you want to lock", "Error", JOptionPane.ERROR_MESSAGE);
+                } else {
+                    int confirm = JOptionPane.showConfirmDialog(FormAccountCRUD.this, "You want to lock this user");
+                    if (confirm == JOptionPane.YES_OPTION) {
+                        int userID = Integer.parseInt(String.valueOf(tableAccount.getValueAt(row, 0)));
+                        Account user = accountController.getAccountById(userID);
+                        if (lockButton.getText().equals("lock")) {
+                            user.setStatus(false);
+                        } else {
+                            user.setStatus(true);
+                        }
+                        accountController.updateAccount(user);
+                        AccountTableModel model = new AccountTableModel(accountController.getAllAccounts());
+                        tableAccount.setModel(model);
+                    }
+                }
+            }
+        });
+        tableAccount.addContainerListener(new ContainerAdapter() {
+        });
     }
 
     private void showFileChooser() {
@@ -176,8 +251,10 @@ public class FormAccountCRUD extends JFrame{
         textFieldAge.setText("");
         textFieldPhoneNumber.setText("");
         try {
-            BufferedImage img = ImageIO.read(new File("static/images/default.png"));
-            pictureUpload.setIcon(new ImageIcon(img.getScaledInstance(150, 150, Image.SCALE_DEFAULT)));
+            ClassLoader classLoader = getClass().getClassLoader();
+            URL resource = classLoader.getResource("static/images/add-icon.png");
+            BufferedImage img = ImageIO.read(resource);
+            pictureUpload.setIcon(new ImageIcon(img.getScaledInstance(64, 64, Image.SCALE_DEFAULT)));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

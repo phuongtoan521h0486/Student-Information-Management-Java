@@ -3,6 +3,7 @@ package org.thd.Views.Home;
 import org.thd.Controllers.AccountController;
 import org.thd.Models.Account;
 import org.thd.Views.AccountManagement.FormUserSystem;
+import org.thd.Views.StudentManagement.FormStudentManagement;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -66,6 +67,13 @@ public class FormMain extends JFrame{
             @Override
             public void mouseClicked(MouseEvent e) {
                 showFileChooser();
+            }
+        });
+        buttonStudent.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new FormStudentManagement().setVisible(true);
+                dispose();
             }
         });
     }

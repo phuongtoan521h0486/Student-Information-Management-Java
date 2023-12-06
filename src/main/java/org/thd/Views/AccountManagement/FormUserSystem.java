@@ -2,6 +2,7 @@ package org.thd.Views.AccountManagement;
 
 import org.thd.Components.ImageRenderer;
 import org.thd.Controllers.AccountController;
+import org.thd.Models.AccountTableModel;
 import org.thd.Models.UserTableModel;
 
 import javax.swing.*;
@@ -41,6 +42,27 @@ public class FormUserSystem extends JFrame{
             public void actionPerformed(ActionEvent e) {
                 new FormAccountCRUD().setVisible(true);
                 dispose();
+            }
+        });
+        buttonDelete.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                /*
+                    implement below need an id column to delete user
+                 */
+
+//                int row = tableListUser.getSelectedRow();
+//                if (row == -1) {
+//                    JOptionPane.showMessageDialog(FormUserSystem.this, "Please chose an account you want to delete", "Error", JOptionPane.ERROR_MESSAGE);
+//                } else {
+//                    int confirm = JOptionPane.showConfirmDialog(FormUserSystem.this, "You want to delete this user");
+//                    if (confirm == JOptionPane.YES_OPTION) {
+//                        int userID = Integer.parseInt(String.valueOf(tableListUser.getValueAt(row, 0)));
+//                        accountController.deleteAccount(userID);
+//                        UserTableModel model = new UserTableModel(accountController.getAllAccounts());
+//                        tableListUser.setModel(model);
+//                    }
+//                }
             }
         });
     }
