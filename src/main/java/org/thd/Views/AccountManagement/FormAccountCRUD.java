@@ -60,9 +60,9 @@ public class FormAccountCRUD extends JFrame{
                 if (tableAccount.getSelectedRow() != -1) {
                     String status = String.valueOf(tableAccount.getValueAt(tableAccount.getSelectedRow(), 3));
                     if (status.equals("Locked")) {
-                        lockButton.setText("enable");
+                        lockButton.setText("Enable");
                     } else {
-                        lockButton.setText("lock");
+                        lockButton.setText("Lock");
                     }
 
                     textFieldUsername.setText("");
@@ -138,7 +138,7 @@ public class FormAccountCRUD extends JFrame{
                     if (confirm == JOptionPane.YES_OPTION) {
                         int userID = Integer.parseInt(String.valueOf(tableAccount.getValueAt(row, 0)));
                         Account user = accountController.getAccountById(userID);
-                        if (lockButton.getText().equals("lock")) {
+                        if (lockButton.getText().equals("Lock")) {
                             user.setStatus(false);
                         } else {
                             user.setStatus(true);
