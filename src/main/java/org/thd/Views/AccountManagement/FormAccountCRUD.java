@@ -152,6 +152,41 @@ public class FormAccountCRUD extends JFrame{
         });
         tableAccount.addContainerListener(new ContainerAdapter() {
         });
+        editButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int selectedRow = tableAccount.getSelectedRow();
+                if (selectedRow != -1) {
+                    int id = (int) tableAccount.getValueAt(selectedRow, 0);
+                    Account account =  accountController.getAccountById(id);
+                    textFieldName.setText(account.getName());
+                    textFieldUsername.setText(account.getUsername());
+                    comboBoxRole.setSelectedIndex(account.getRole().equals("Employee")? 0: 1);
+                    textFieldAge.setText(String.valueOf(account.getAge()));
+                    textFieldPhoneNumber.setText(account.getPhoneNumber());
+                    pictureData = account.getPicture();
+
+                    if (pictureData != null && pictureData.length > 0) {
+                        ImageIcon imageIcon = new ImageIcon(pictureData);
+                        Image image = imageIcon.getImage();
+                        Image scaledImage = image.getScaledInstance(pictureUpload.getWidth(), pictureUpload.getHeight(), Image.SCALE_SMOOTH);
+                        ImageIcon scaledIcon = new ImageIcon(scaledImage);
+                        pictureUpload.setIcon(scaledIcon);
+                    } else {
+                        pictureUpload.setIcon(null);
+                    }
+
+                } else {
+                    // no selected
+                }
+            }
+        });
+        saveButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                updateAccount();
+            }
+        });
     }
 
     private void showFileChooser() {
@@ -236,6 +271,77 @@ public class FormAccountCRUD extends JFrame{
             clearForm();
         } else {
             JOptionPane.showMessageDialog(this, "Failed to create account.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+
+        AccountTableModel model = new AccountTableModel(accountController.getAllAccounts());
+        tableAccount.setModel(model);
+    }
+
+    private void updateAccount() {
+
+        int selectedRow = tableAccount.getSelectedRow();
+        int id = selectedRow != -1 ? (int) tableAccount.getValueAt(selectedRow, 0): -1;
+
+        String username = textFieldUsername.getText();
+        String password = new String(passwordField.getPassword());
+        String confirm = new String(passwordFieldConfirm.getPassword());
+        String role = (String) comboBoxRole.getSelectedItem();
+        String name = textFieldName.getText();
+        int age = 0;
+
+        if (textFieldAge.getText().isEmpty() || textFieldAge.getText() == null) {
+            JOptionPane.showMessageDialog(this, "Please submit enough valid information", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        else {
+            try {
+                age = Integer.parseInt(textFieldAge.getText());
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(this, "Not valid age", "Error", JOptionPane.ERROR_MESSAGE);
+                textFieldAge.setText("");
+                return;
+            }
+        }
+        String phoneNumber = textFieldPhoneNumber.getText();
+
+        if (username.isEmpty() || username == null ||
+                 name.isEmpty() || name == null ||
+                phoneNumber.isEmpty() || phoneNumber == null) {
+            JOptionPane.showMessageDialog(this, "Please submit enough valid information", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        if ((password != null && confirm == null) ||
+                (password == null && confirm != null) ||
+                (!password.isEmpty() && confirm.isEmpty()) ||
+                (password.isEmpty() && !confirm.isEmpty())) {
+            JOptionPane.showMessageDialog(this, "If you want to change password, please submit enough or leave password blank", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        Account editAccount = new Account(id, username, password, role, pictureData, name, age, phoneNumber, true);
+        boolean isUpdate = true;
+
+        if (password != null && confirm != null && !password.isEmpty() && !confirm.isEmpty()) {
+            if (!confirm.equals(password)) {
+                JOptionPane.showMessageDialog(this, "Password and Confirm Password are not match", "Error", JOptionPane.ERROR_MESSAGE);
+                passwordField.setText("");
+                passwordFieldConfirm.setText("");
+                passwordField.requestFocus();
+                return;
+            }
+
+            isUpdate = accountController.updateAccount(editAccount);
+        }
+        else {
+            isUpdate = accountController.updateAccountNoPassword(editAccount);
+        }
+
+        if (isUpdate) {
+            JOptionPane.showMessageDialog(this, "Account update successfully." );
+            clearForm();
+        } else {
+            JOptionPane.showMessageDialog(this, "Failed to update account.", "Error", JOptionPane.ERROR_MESSAGE);
         }
 
         AccountTableModel model = new AccountTableModel(accountController.getAllAccounts());

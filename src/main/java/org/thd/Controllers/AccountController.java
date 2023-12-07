@@ -37,6 +37,9 @@ public class AccountController {
     public boolean updateAccount(Account account) {
         return accountDAO.update(account);
     }
+    public boolean updateAccountNoPassword(Account account) {
+        return accountDAO.updateNoPassword(account);
+    }
 
     public boolean deleteAccount(Integer accountId) {
         return accountDAO.delete(accountId);
@@ -44,6 +47,10 @@ public class AccountController {
 
     public Account getAccountByUsername(String username) {
         return accountDAO.getAccountByUsername(username);
+    }
+
+    public Account getAccountByName(String name)  {
+        return accountDAO.getAccountByName(name);
     }
 
     public boolean updatePicture(Integer id, byte[] newPicture) {

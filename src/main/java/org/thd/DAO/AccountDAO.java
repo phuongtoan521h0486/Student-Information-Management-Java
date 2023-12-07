@@ -124,8 +124,9 @@ public class AccountDAO implements Repository<Account, Integer> {
              PreparedStatement preparedStatement = connection.prepareStatement(
                      "UPDATE accounts SET username=?, password=?, role=?, picture=?, name=?, age=?, phoneNumber=?, status=? WHERE id=?")) {
 
+            String hashedPassword = BCrypt.hashpw(account.getPassword(), BCrypt.gensalt());
             preparedStatement.setString(1, account.getUsername());
-            preparedStatement.setString(2, account.getPassword());
+            preparedStatement.setString(2, hashedPassword);
             preparedStatement.setString(3, account.getRole());
             preparedStatement.setBytes(4, account.getPicture());
             preparedStatement.setString(5, account.getName());
@@ -133,6 +134,30 @@ public class AccountDAO implements Repository<Account, Integer> {
             preparedStatement.setString(7, account.getPhoneNumber());
             preparedStatement.setBoolean(8, account.isStatus());
             preparedStatement.setInt(9, account.getId());
+
+            int rowsAffected = preparedStatement.executeUpdate();
+            return rowsAffected > 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean updateNoPassword(Account account) {
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(
+                     "UPDATE accounts SET username=?, role=?, picture=?, name=?, age=?, phoneNumber=?, status=? WHERE id=?")) {
+
+
+            preparedStatement.setString(1, account.getUsername());
+            preparedStatement.setString(2, account.getRole());
+            preparedStatement.setBytes(3, account.getPicture());
+            preparedStatement.setString(4, account.getName());
+            preparedStatement.setInt(5, account.getAge());
+            preparedStatement.setString(6, account.getPhoneNumber());
+            preparedStatement.setBoolean(7, account.isStatus());
+            preparedStatement.setInt(8, account.getId());
 
             int rowsAffected = preparedStatement.executeUpdate();
             return rowsAffected > 0;
@@ -195,6 +220,25 @@ public class AccountDAO implements Repository<Account, Integer> {
              PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM accounts WHERE username=?")) {
 
             preparedStatement.setString(1, username);
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    return extractAccountFromResultSet(resultSet);
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public Account getAccountByName(String name) {
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM accounts WHERE name=?")) {
+
+            preparedStatement.setString(1, name);
 
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 if (resultSet.next()) {

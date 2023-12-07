@@ -1,7 +1,9 @@
 package org.thd.Views.Home;
 
 import org.thd.Controllers.AccountController;
+import org.thd.Controllers.LoginHistoryController;
 import org.thd.Models.Account;
+import org.thd.Models.LoginHistory;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -15,6 +17,7 @@ public class FormLogin extends JFrame{
     private JPasswordField passwordFieldPassword;
     private JButton buttonLogin;
     private AccountController accountController;
+    private LoginHistoryController loginHistoryController;
     public FormLogin() {
         setTitle("Login Form");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -22,6 +25,7 @@ public class FormLogin extends JFrame{
         setLocationRelativeTo(null);
 
         accountController = new AccountController();
+        loginHistoryController = new LoginHistoryController();
 
         buttonLogin.addActionListener(new ActionListener() {
             @Override
@@ -39,6 +43,9 @@ public class FormLogin extends JFrame{
                         String userRole = authenticatedAccount.getRole();
                         JOptionPane.showMessageDialog(FormLogin.this, "Login successful! User role: " + userRole);
                         new FormMain(authenticatedAccount).setVisible(true);
+
+                        loginHistoryController.addLoginHistory(new LoginHistory(authenticatedAccount.getId()));
+
                         dispose();
                     } else {
                         JOptionPane.showMessageDialog(FormLogin.this, "Login failed. Invalid username or password.");

@@ -42,7 +42,6 @@ public class FormStudentManagement extends JFrame{
 
     public FormStudentManagement() {
         setTitle("Student Management Form");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(1080, 720);
         setLocationRelativeTo(null);
 

@@ -1,13 +1,17 @@
 package org.thd.Views.Home;
 
 import org.thd.Controllers.AccountController;
+import org.thd.Controllers.LoginHistoryController;
 import org.thd.Models.Account;
+import org.thd.Models.HistoryTableModel;
+import org.thd.Models.LoginHistory;
 import org.thd.Views.AccountManagement.FormUserSystem;
 import org.thd.Views.StudentManagement.FormStudentManagement;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.table.TableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -18,6 +22,7 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.List;
 
 public class FormMain extends JFrame{
     private JPanel panelMain;
@@ -27,16 +32,19 @@ public class FormMain extends JFrame{
     private JButton buttonUser;
     private JButton buttonStudent;
     private JButton logoutButton;
-    private JTable tableHistoryLogin;
+    private JTable tableLoginHistory;
 
     private Account user;
     private AccountController accountController;
+    private LoginHistoryController loginHistoryController;
     private byte[] pictureData;
+
 
     public FormMain(Account user) {
         accountController = new AccountController();
-        this.user = user;
+        loginHistoryController = new LoginHistoryController();
 
+        this.user = user;
 
         displayName.setText(user.getName());
         try {
@@ -56,11 +64,15 @@ public class FormMain extends JFrame{
         setLocationRelativeTo(null);
         add(panelMain);
 
+        List<LoginHistory> loginHistoryList = loginHistoryController.getAllLoginHistory();
+        List<Account> accountList = accountController.getAllAccounts();
+
+        tableLoginHistory.setModel(new HistoryTableModel(loginHistoryList, accountList));
+
         buttonUser.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 new FormUserSystem().setVisible(true);
-                dispose();
             }
         });
         image.addMouseListener(new MouseAdapter() {
@@ -73,7 +85,6 @@ public class FormMain extends JFrame{
             @Override
             public void actionPerformed(ActionEvent e) {
                 new FormStudentManagement().setVisible(true);
-                dispose();
             }
         });
     }
