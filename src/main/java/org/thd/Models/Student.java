@@ -92,6 +92,7 @@ public class Student {
         this.picture = picture;
     }
 
+
     @Override
     public String toString() {
         return "Student{" +

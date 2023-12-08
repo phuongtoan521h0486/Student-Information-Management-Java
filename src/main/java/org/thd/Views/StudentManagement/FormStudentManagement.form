@@ -73,14 +73,6 @@
                       <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                     </constraints>
                   </hspacer>
-                  <component id="c970d" class="javax.swing.JButton" binding="addButton" default-binding="true">
-                    <constraints>
-                      <grid row="0" column="6" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                    </constraints>
-                    <properties>
-                      <text value="Add"/>
-                    </properties>
-                  </component>
                   <component id="3af57" class="javax.swing.JButton" binding="editButton" default-binding="true">
                     <constraints>
                       <grid row="0" column="7" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
@@ -128,6 +120,14 @@
                     <properties>
                       <label value="Save"/>
                       <text value="Save"/>
+                    </properties>
+                  </component>
+                  <component id="9c9f8" class="javax.swing.JButton" binding="buttonAdd">
+                    <constraints>
+                      <grid row="0" column="6" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties>
+                      <text value="Add"/>
                     </properties>
                   </component>
                 </children>
@@ -181,7 +181,7 @@
                       <grid row="7" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
                     </constraints>
                   </vspacer>
-                  <component id="318a4" class="javax.swing.JTextField" binding="textFieldID">
+                  <component id="318a4" class="javax.swing.JTextField" binding="studentIDField">
                     <constraints>
                       <grid row="0" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="6" anchor="8" fill="0" indent="0" use-parent-layout="false">
                         <preferred-size width="150" height="-1"/>
@@ -197,7 +197,7 @@
                       <text value="Email"/>
                     </properties>
                   </component>
-                  <component id="163a9" class="javax.swing.JTextField" binding="textFieldEmail">
+                  <component id="163a9" class="javax.swing.JTextField" binding="studentEmail">
                     <constraints>
                       <grid row="1" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="6" anchor="8" fill="0" indent="0" use-parent-layout="false">
                         <preferred-size width="150" height="-1"/>
@@ -213,7 +213,7 @@
                       <text value="Name"/>
                     </properties>
                   </component>
-                  <component id="ee070" class="javax.swing.JTextField" binding="textFieldName">
+                  <component id="ee070" class="javax.swing.JTextField" binding="studentName">
                     <constraints>
                       <grid row="2" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="6" anchor="8" fill="0" indent="0" use-parent-layout="false">
                         <preferred-size width="150" height="-1"/>
@@ -254,7 +254,7 @@
                       <text value="Major"/>
                     </properties>
                   </component>
-                  <component id="c52c1" class="javax.swing.JTextField" binding="textFieldMajor">
+                  <component id="c52c1" class="javax.swing.JTextField" binding="major">
                     <constraints>
                       <grid row="4" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                         <preferred-size width="150" height="-1"/>
@@ -270,7 +270,7 @@
                     <properties/>
                     <border type="none"/>
                     <children>
-                      <component id="bc3d" class="javax.swing.JLabel">
+                      <component id="bc3d" class="javax.swing.JLabel" binding="image">
                         <constraints>
                           <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                         </constraints>
@@ -297,7 +297,7 @@
                       <text value="GPA"/>
                     </properties>
                   </component>
-                  <component id="936e6" class="javax.swing.JTextField" binding="textFieldGPA">
+                  <component id="936e6" class="javax.swing.JTextField" binding="studentGPA">
                     <constraints>
                       <grid row="5" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                         <preferred-size width="150" height="-1"/>
@@ -313,7 +313,7 @@
                       <text value="Training Point"/>
                     </properties>
                   </component>
-                  <component id="ab9e4" class="javax.swing.JTextField" binding="textFieldPoint">
+                  <component id="ab9e4" class="javax.swing.JTextField" binding="studentPoint">
                     <constraints>
                       <grid row="6" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                         <preferred-size width="150" height="-1"/>

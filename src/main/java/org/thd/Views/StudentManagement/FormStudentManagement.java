@@ -6,6 +6,7 @@ import org.thd.Components.ImageRenderer;
 import org.thd.Controllers.StudentController;
 import org.thd.Models.Student;
 import org.thd.Models.StudentTableModel;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -14,6 +15,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -24,23 +26,24 @@ public class FormStudentManagement extends JFrame{
     private JPanel panelMain;
     private JTable tableStudents;
     private JButton importButton;
-    private JButton addButton;
     private JButton editButton;
     private JButton deleteButton;
-    private JTextField textFieldID;
-    private JTextField textFieldEmail;
-    private JTextField textFieldName;
+    private JTextField studentIDField;
+    private JTextField studentEmail;
+    private JTextField studentName;
     private JRadioButton maleRadioButton;
     private JRadioButton femaleRadioButton;
-    private JTextField textFieldMajor;
+    private JTextField major;
     private JButton uploadButton;
     private JScrollPane myScroll;
     private JButton exportExcelButton;
     private JButton detailButton;
     private JButton searchStudentsButton;
-    private JTextField textFieldGPA;
-    private JTextField textFieldPoint;
+    private JTextField studentGPA;
+    private JTextField studentPoint;
     private JButton buttonSave;
+    private JLabel image;
+    private JButton buttonAdd;
 
     private StudentController studentController;
 
@@ -181,6 +184,89 @@ public class FormStudentManagement extends JFrame{
                 new FormSearchNSort().setVisible(true);
             }
         });
+
+        deleteButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int row = tableStudents.getSelectedRow();
+                if (row == -1) {
+                    JOptionPane.showMessageDialog(FormStudentManagement.this, "Please chose an student you want to delete", "Error", JOptionPane.ERROR_MESSAGE);
+                } else {
+                    int confirm = JOptionPane.showConfirmDialog(FormStudentManagement.this, "You want to delete this student");
+                    if (confirm == JOptionPane.YES_OPTION) {
+                        String studentID = String.valueOf(tableStudents.getValueAt(row, 1));
+                        studentController.deleteStudent(studentID);
+                        StudentTableModel model = new StudentTableModel(studentController.getAllStudents());
+                        tableStudents.setModel(model);
+                        tableStudents.getColumnModel().getColumn(0).setCellRenderer(new ImageRenderer(145, 193));
+                    }
+                }
+            }
+        });
+        detailButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new FormDetailStudent().setVisible(true);
+            }
+        });
+        editButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int row = tableStudents.getSelectedRow();
+                if (row == -1) {
+                    JOptionPane.showMessageDialog(FormStudentManagement.this, "Please chose an student you want to edit", "Error", JOptionPane.ERROR_MESSAGE);
+                } else {
+                    String studentID = String.valueOf(tableStudents.getValueAt(row, 1));
+                    Student student = studentController.getStudentById(studentID);
+                    studentIDField.setText(student.getStudentId());
+                    studentIDField.setEnabled(false);
+                    studentEmail.setText(student.getEmail());
+                    studentName.setText(student.getName());
+                    if (student.isGender()) {
+                        maleRadioButton.setSelected(true);
+                    } else {
+                        femaleRadioButton.setSelected(true);
+                    }
+                    major.setText(student.getMajor());
+                    studentGPA.setText(String.valueOf(student.getGpa()));
+                    studentPoint.setText(String.valueOf(student.getTrainingPoint()));
+                    image.setIcon(new ImageIcon(student.getPicture()));
+                }
+                StudentTableModel model = new StudentTableModel(studentController.getAllStudents());
+                tableStudents.setModel(model);
+                tableStudents.getColumnModel().getColumn(0).setCellRenderer(new ImageRenderer(145, 193));
+            }
+        });
+        buttonSave.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (buttonSave.getText().equals("Save")) {
+                    int confirm = JOptionPane.showConfirmDialog(FormStudentManagement.this, "You want to save this student");
+                    if (confirm == JOptionPane.YES_OPTION) {
+                        try {
+                            Student student = new Student(studentIDField.getText(),
+                                                            studentEmail.getText(),
+                                                            studentName.getText(),
+                                                            maleRadioButton.isSelected(),
+                                                            major.getText(),
+                                                            Double.parseDouble(studentGPA.getText()),
+                                                            Integer.parseInt(studentPoint.getText()),
+                                                            getImageBytes((ImageIcon)image.getIcon())
+                                                            );
+                            studentController.updateStudent(student);
+                        } catch (IOException ex) {
+                            throw new RuntimeException(ex);
+                        }
+                    }
+
+                    clearField();
+                    StudentTableModel model = new StudentTableModel(studentController.getAllStudents());
+                    tableStudents.setModel(model);
+                    tableStudents.getColumnModel().getColumn(0).setCellRenderer(new ImageRenderer(145, 193));
+                }
+
+            }
+        });
     }
     private void addImageToCell(Workbook workbook, Sheet sheet, int rowIndex, int columnIndex, ImageIcon imageIcon) {
         try {
@@ -212,6 +298,19 @@ public class FormStudentManagement extends JFrame{
             ImageIO.write(bufferedImage, "png", baos);
             return baos.toByteArray();
         }
+    }
+
+    private void clearField() {
+        studentIDField.setText("");
+        studentIDField.setEnabled(true);
+        studentEmail.setText("");
+        studentName.setText("");
+        major.setText("");
+        studentGPA.setText("");
+        studentPoint.setText("");
+        ClassLoader classLoader = getClass().getClassLoader();
+        URL resource = classLoader.getResource("static/images/add-icon.png");
+        image.setIcon(new ImageIcon(resource));
     }
 }
 
