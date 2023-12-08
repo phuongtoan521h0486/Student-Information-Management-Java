@@ -14,16 +14,18 @@ public class StudentDAO implements Repository<Student, String> {
             return null;
         }
 
-        String insertQuery = "INSERT INTO Student (studentId, email, name, gender, major, picture) VALUES (?, ?, ?, ?, ?, ?)";
         try (Connection connection = DBConnection.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(insertQuery)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(
+                     "INSERT INTO Students (studentId, email, name, gender, major, gpa, trainingPoint,picture) VALUES (?, ?, ?, ?, ?, ?, ?, ?)")) {
 
             preparedStatement.setString(1, student.getStudentId());
             preparedStatement.setString(2, student.getEmail());
             preparedStatement.setString(3, student.getName());
             preparedStatement.setBoolean(4, student.isGender());
             preparedStatement.setString(5, student.getMajor());
-            preparedStatement.setBytes(6, student.getPicture());
+            preparedStatement.setDouble(6, student.getGpa());
+            preparedStatement.setInt(7, student.getTrainingPoint());
+            preparedStatement.setBytes(8, student.getPicture());
 
             preparedStatement.executeUpdate();
             return student.getStudentId();
@@ -36,10 +38,10 @@ public class StudentDAO implements Repository<Student, String> {
     @Override
     public List<Student> readAll() {
         List<Student> students = new ArrayList<>();
-        String selectQuery = "SELECT * FROM Student";
+
         try (Connection connection = DBConnection.getConnection();
              Statement statement = connection.createStatement();
-             ResultSet resultSet = statement.executeQuery(selectQuery)) {
+             ResultSet resultSet = statement.executeQuery("SELECT * FROM Students")) {
 
             while (resultSet.next()) {
                 Student student = createStudentFromResultSet(resultSet);
@@ -53,9 +55,10 @@ public class StudentDAO implements Repository<Student, String> {
 
     @Override
     public Student read(String id) {
-        String selectQuery = "SELECT * FROM Student WHERE studentId = ?";
+
         try (Connection connection = DBConnection.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(selectQuery)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(
+                     "SELECT * FROM Students WHERE studentId = ?")) {
 
             preparedStatement.setString(1, id);
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
@@ -71,16 +74,19 @@ public class StudentDAO implements Repository<Student, String> {
 
     @Override
     public boolean update(Student student) {
-        String updateQuery = "UPDATE Student SET email = ?, name = ?, gender = ?, major = ?, picture = ? WHERE studentId = ?";
+
         try (Connection connection = DBConnection.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(updateQuery)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(
+                     "UPDATE Students SET email = ?, name = ?, gender = ?, major = ?, gpa = ?, trainingPoint = ?, picture = ? WHERE studentId = ?")) {
 
             preparedStatement.setString(1, student.getEmail());
             preparedStatement.setString(2, student.getName());
             preparedStatement.setBoolean(3, student.isGender());
             preparedStatement.setString(4, student.getMajor());
-            preparedStatement.setBytes(5, student.getPicture());
-            preparedStatement.setString(6, student.getStudentId());
+            preparedStatement.setDouble(5, student.getGpa());
+            preparedStatement.setInt(6, student.getTrainingPoint());
+            preparedStatement.setBytes(7, student.getPicture());
+            preparedStatement.setString(8, student.getStudentId());
 
             int rowsAffected = preparedStatement.executeUpdate();
             return rowsAffected > 0;
@@ -92,9 +98,10 @@ public class StudentDAO implements Repository<Student, String> {
 
     @Override
     public boolean delete(String id) {
-        String deleteQuery = "DELETE FROM Student WHERE studentId = ?";
+
         try (Connection connection = DBConnection.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(deleteQuery)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(
+                     "DELETE FROM Students WHERE studentId = ?")) {
 
             preparedStatement.setString(1, id);
 
@@ -113,6 +120,8 @@ public class StudentDAO implements Repository<Student, String> {
         student.setName(resultSet.getString("name"));
         student.setGender(resultSet.getBoolean("gender"));
         student.setMajor(resultSet.getString("major"));
+        student.setGpa(resultSet.getDouble("gpa"));
+        student.setTrainingPoint(resultSet.getInt("trainingPoint"));
         student.setPicture(resultSet.getBytes("picture"));
         return student;
     }

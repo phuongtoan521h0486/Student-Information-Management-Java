@@ -37,6 +37,10 @@ public class FormStudentManagement extends JFrame{
     private JScrollPane myScroll;
     private JButton exportExcelButton;
     private JButton detailButton;
+    private JButton searchStudentsButton;
+    private JTextField textFieldGPA;
+    private JTextField textFieldPoint;
+    private JButton buttonSave;
 
     private StudentController studentController;
 
@@ -78,17 +82,17 @@ public class FormStudentManagement extends JFrame{
                         while (rowIterator.hasNext()) {
                             Row row = rowIterator.next();
 
-                            boolean gender = row.getCell(4).getStringCellValue().equals("Nam")
-                                    || row.getCell(4).getStringCellValue().equals("Male");
+                            String gender = row.getCell(4).getStringCellValue();
 
-                            byte[] pictureData = pictureMap.get(row.getRowNum());
                             Student student = new Student(
                                     row.getCell(1).getStringCellValue(),
                                     row.getCell(2).getStringCellValue(),
                                     row.getCell(3).getStringCellValue(),
-                                    gender,
+                                    gender.equals("Nam") || gender.equals("Male"),
                                     row.getCell(5).getStringCellValue(),
-                                    pictureData
+                                    row.getCell(6).getNumericCellValue(),
+                                    (int) row.getCell(7).getNumericCellValue(),
+                                    pictureMap.get(row.getRowNum())
                                     );
                             studentController.addStudent(student);
                         }
@@ -117,42 +121,43 @@ public class FormStudentManagement extends JFrame{
                 if (userSelection == JFileChooser.APPROVE_OPTION) {
                     String filePath = fileChooser.getSelectedFile().getAbsolutePath();
                     if (!filePath.toLowerCase().endsWith(".xlsx")) {
-                        filePath += ".xlsx"; // Ensure the file has the .xlsx extension
+                        filePath += ".xlsx";
                     }
 
                     Workbook workbook = new XSSFWorkbook();
                     Sheet sheet = workbook.createSheet("Students");
                     sheet.setColumnWidth(0, 6400);
-                    // Create header row
+
                     Row headerRow = sheet.createRow(0);
                     for (int i = 0; i < model.getColumnCount(); i++) {
                         Cell cell = headerRow.createCell(i);
                         cell.setCellValue(model.getColumnName(i));
                     }
 
-                    // Populate data
+
                     for (int rowIndex = 0; rowIndex < model.getRowCount(); rowIndex++) {
                         Row dataRow = sheet.createRow(rowIndex + 1);
 
                         dataRow.setHeightInPoints(193);
 
-                        // Populate cells with student data
                         for (int columnIndex = 0; columnIndex < model.getColumnCount(); columnIndex++) {
                             Cell cell = dataRow.createCell(columnIndex);
                             Object value = model.getValueAt(rowIndex, columnIndex);
 
                             if (value != null) {
-                                if (value instanceof String) {
+                                if (value instanceof String ) {
                                     cell.setCellValue((String) value);
+                                } else if (value instanceof Double) {
+                                    cell.setCellValue((Double) value);
+                                } else if (value instanceof Integer) {
+                                    cell.setCellValue((Integer) value);
                                 } else if (value instanceof ImageIcon) {
                                     addImageToCell(workbook, sheet, rowIndex + 1, columnIndex, (ImageIcon) value);
                                 }
-                                // Add more conditions for other data types if necessary
                             }
                         }
                     }
 
-                    // Save the workbook to the specified file path
                     try (FileOutputStream fileOut = new FileOutputStream(filePath)) {
                         workbook.write(fileOut);
                         JOptionPane.showMessageDialog(null, "Data exported to " + filePath);
@@ -168,6 +173,12 @@ public class FormStudentManagement extends JFrame{
                     }
                 }
 
+            }
+        });
+        searchStudentsButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new FormSearchNSort().setVisible(true);
             }
         });
     }

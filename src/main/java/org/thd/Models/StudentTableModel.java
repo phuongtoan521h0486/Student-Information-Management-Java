@@ -6,7 +6,7 @@ import java.util.List;
 
 public class StudentTableModel extends AbstractTableModel {
     private List<Student> students;
-    private String[] columnNames = {"Image", "Student ID", "Email", "Name", "Gender", "Major"};
+    private String[] columnNames = {"Image", "Student ID", "Email", "Name", "Gender", "Major", "GPA", "Training Point"};
 
     public StudentTableModel(List<Student> students) {
         this.students = students;
@@ -38,6 +38,10 @@ public class StudentTableModel extends AbstractTableModel {
                 return student.isGender() ? "Male": "Female";
             case 5:
                 return student.getMajor();
+            case 6:
+                return student.getGpa();
+            case 7:
+                return student.getTrainingPoint();
             default:
                 return null;
         }

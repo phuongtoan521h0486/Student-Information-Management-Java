@@ -8,17 +8,23 @@ public class Student {
     private String name;
     private boolean gender;
     private String major;
+
+    private double gpa;
+
+    private int trainingPoint;
     private byte[] picture;
 
     public Student() {
     }
 
-    public Student(String studentId, String email, String name, boolean gender, String major, byte[] picture) {
+    public Student(String studentId, String email, String name, boolean gender, String major, double gpa, int trainingPoint, byte[] picture) {
         this.studentId = studentId;
         this.email = email;
         this.name = name;
         this.gender = gender;
         this.major = major;
+        this.gpa = gpa;
+        this.trainingPoint = trainingPoint;
         this.picture = picture;
     }
 
@@ -62,6 +68,22 @@ public class Student {
         this.major = major;
     }
 
+    public double getGpa() {
+        return gpa;
+    }
+
+    public void setGpa(double gpa) {
+        this.gpa = gpa;
+    }
+
+    public int getTrainingPoint() {
+        return trainingPoint;
+    }
+
+    public void setTrainingPoint(int trainingPoint) {
+        this.trainingPoint = trainingPoint;
+    }
+
     public byte[] getPicture() {
         return picture;
     }
@@ -78,6 +100,8 @@ public class Student {
                 ", name='" + name + '\'' +
                 ", gender=" + gender +
                 ", major='" + major + '\'' +
+                ", gpa=" + gpa +
+                ", trainingPoint=" + trainingPoint +
                 ", picture=" + Arrays.toString(picture) +
                 '}';
     }
