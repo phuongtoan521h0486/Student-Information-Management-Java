@@ -4,6 +4,7 @@ import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.*;
 import org.thd.Components.ImageRenderer;
 import org.thd.Controllers.StudentController;
+import org.thd.Models.Account;
 import org.thd.Models.Student;
 import org.thd.Models.StudentTableModel;
 
@@ -16,6 +17,7 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.URL;
+import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -47,6 +49,8 @@ public class FormStudentManagement extends JFrame{
 
     private StudentController studentController;
 
+    private byte[] StudentPictureData;
+
     public FormStudentManagement() {
         setTitle("Student Management Form");
         setSize(1080, 720);
@@ -56,6 +60,7 @@ public class FormStudentManagement extends JFrame{
         StudentTableModel model = new StudentTableModel(studentController.getAllStudents());
         tableStudents.setModel(model);
         tableStudents.getColumnModel().getColumn(0).setCellRenderer(new ImageRenderer(145, 193));
+        buttonSave.setVisible(false);
 
         add(panelMain);
         importButton.addActionListener(new ActionListener() {
@@ -216,6 +221,7 @@ public class FormStudentManagement extends JFrame{
                 if (row == -1) {
                     JOptionPane.showMessageDialog(FormStudentManagement.this, "Please chose an student you want to edit", "Error", JOptionPane.ERROR_MESSAGE);
                 } else {
+                    buttonSave.setVisible(true);
                     String studentID = String.valueOf(tableStudents.getValueAt(row, 1));
                     Student student = studentController.getStudentById(studentID);
                     studentIDField.setText(student.getStudentId());
@@ -263,8 +269,34 @@ public class FormStudentManagement extends JFrame{
                     StudentTableModel model = new StudentTableModel(studentController.getAllStudents());
                     tableStudents.setModel(model);
                     tableStudents.getColumnModel().getColumn(0).setCellRenderer(new ImageRenderer(145, 193));
+                    buttonSave.setVisible(false);
                 }
 
+            }
+        });
+        buttonAdd.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (StudentPictureData == null) {
+                    BufferedImage img = null;
+                    try {
+                        ClassLoader classLoader = getClass().getClassLoader();
+                        URL resource = classLoader.getResource("static/images/default.png");
+                        img = ImageIO.read(resource);
+                        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                        ImageIO.write(img, "jpg", bos );
+                        StudentPictureData = bos.toByteArray();
+                    } catch (IOException error) {
+                        error.printStackTrace();
+                    }
+                }
+                createStudent();
+            }
+        });
+        uploadButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                showFileChooser();
             }
         });
     }
@@ -308,9 +340,90 @@ public class FormStudentManagement extends JFrame{
         major.setText("");
         studentGPA.setText("");
         studentPoint.setText("");
-        ClassLoader classLoader = getClass().getClassLoader();
-        URL resource = classLoader.getResource("static/images/add-icon.png");
-        image.setIcon(new ImageIcon(resource));
+        try {
+            ClassLoader classLoader = getClass().getClassLoader();
+            URL resource = classLoader.getResource("static/images/add-icon.png");
+            BufferedImage img = ImageIO.read(resource);
+            image.setIcon(new ImageIcon(img.getScaledInstance(64, 64, Image.SCALE_DEFAULT)));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void createStudent() {
+        String id = studentIDField.getText();
+        String email = studentEmail.getText();
+        String name = studentName.getText();
+        boolean gender = maleRadioButton.isSelected();
+        String studentMajor = major.getText();
+        String gpa = studentGPA.getText();
+        String point = studentPoint.getText();
+
+        if (id.isEmpty() || id == null || email.isEmpty() || email == null ||
+                studentMajor.isEmpty() || studentMajor == null || name.isEmpty() || name == null ||
+                point.isEmpty() || point == null || gpa.isEmpty() || gpa == null) {
+            JOptionPane.showMessageDialog(this, "Please submit enough valid information", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        Student existingStudent = studentController.getStudentById(id);
+        if (existingStudent != null) {
+            JOptionPane.showMessageDialog(this, "Student Id already exists. Please choose another Student ID.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        String studentID = null;
+        Student student = new Student(id,
+                                        email,
+                                        name,
+                                        gender,
+                                        studentMajor,
+                                        Double.parseDouble(gpa),
+                                        Integer.parseInt(point),
+                                        StudentPictureData
+                                        );
+        studentID = studentController.addStudent(student);
+
+        if (studentID != null) {
+            JOptionPane.showMessageDialog(this, "Account created successfully. student ID: " + studentID);
+            clearField();
+        } else {
+            JOptionPane.showMessageDialog(this, "Failed to create student.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+
+        StudentPictureData = null;
+        StudentTableModel model = new StudentTableModel(studentController.getAllStudents());
+        tableStudents.setModel(model);
+        tableStudents.getColumnModel().getColumn(0).setCellRenderer(new ImageRenderer(145, 193));
+    }
+
+    private void showFileChooser() {
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setFileFilter(new FileNameExtensionFilter("Image files", "jpg", "jpeg", "png", "gif"));
+
+        int result = fileChooser.showOpenDialog(this);
+
+        if (result == JFileChooser.APPROVE_OPTION) {
+            File selectedFile = fileChooser.getSelectedFile();
+
+
+            try {
+                StudentPictureData = Files.readAllBytes(selectedFile.toPath());
+            } catch (IOException ex) {
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(this, "Error reading the image file", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            // Display the selected image in the JLabel
+            displayImage(selectedFile);
+        }
+    }
+
+    private void displayImage(File file) {
+        ImageIcon imageIcon = new ImageIcon(file.getAbsolutePath());
+        Image imageStudent = imageIcon.getImage().getScaledInstance(image.getWidth(), image.getHeight(), Image.SCALE_SMOOTH);
+        image.setIcon(new ImageIcon(imageStudent));
     }
 }
 
