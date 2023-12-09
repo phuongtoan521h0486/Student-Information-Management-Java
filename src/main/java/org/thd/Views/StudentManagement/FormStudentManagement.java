@@ -211,7 +211,14 @@ public class FormStudentManagement extends JFrame{
         detailButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                new FormDetailStudent().setVisible(true);
+                int row = tableStudents.getSelectedRow();
+                if (row == -1) {
+                    JOptionPane.showMessageDialog(FormStudentManagement.this, "Please chose an student you want to view detail", "Error", JOptionPane.ERROR_MESSAGE);
+                } else {
+                    String studentID = String.valueOf(tableStudents.getValueAt(row, 1));
+                    Student student = studentController.getStudentById(studentID);
+                    new FormDetailStudent(student).setVisible(true);
+                }
             }
         });
         editButton.addActionListener(new ActionListener() {
@@ -236,7 +243,13 @@ public class FormStudentManagement extends JFrame{
                     major.setText(student.getMajor());
                     studentGPA.setText(String.valueOf(student.getGpa()));
                     studentPoint.setText(String.valueOf(student.getTrainingPoint()));
-                    image.setIcon(new ImageIcon(student.getPicture()));
+
+                    ImageIcon originalIcon = new ImageIcon(student.getPicture());
+                    Image originalImage = originalIcon.getImage();
+                    Image resizedImage = originalImage.getScaledInstance(145, 193, Image.SCALE_SMOOTH);
+                    image.setIcon(new ImageIcon(resizedImage));
+
+                    StudentPictureData = student.getPicture();
                 }
                 StudentTableModel model = new StudentTableModel(studentController.getAllStudents());
                 tableStudents.setModel(model);
