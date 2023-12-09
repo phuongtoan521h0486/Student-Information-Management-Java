@@ -5,6 +5,7 @@ import org.thd.Models.Student;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class StudentDAO implements Repository<Student, String> {
 
@@ -111,6 +112,76 @@ public class StudentDAO implements Repository<Student, String> {
             e.printStackTrace();
             return false;
         }
+    }
+
+    public List<Student> searchCriteria(List<String> filter, List<String> sort) {
+        List<Student> students = new ArrayList<>();
+        StringBuilder condition = new StringBuilder();
+        StringBuilder sortCriteria = new StringBuilder();
+
+        String sql = "SELECT * FROM Students";
+        if (!filter.isEmpty() && !sort.isEmpty()) {
+            condition.append(filter.get(0));
+            for (int i = 1; i < filter.size(); i++) {
+                condition.append(" AND " + filter.get(i));
+            }
+
+            sortCriteria.append(sort.get(0));
+            for (int i = 1; i < sort.size(); i++) {
+                sortCriteria.append(", " + sort.get(i));
+            }
+            sql = sql + " WHERE " + condition.toString() + " ORDER BY " + sortCriteria.toString();
+        } else if (filter.isEmpty() && ! sort.isEmpty()) {
+            sortCriteria.append(sort.get(0));
+            for (int i = 1; i < sort.size(); i++) {
+                sortCriteria.append(", " + sort.get(i));
+            }
+
+            sql = sql + " ORDER BY " + sortCriteria.toString();
+        } else if (sort.isEmpty() && !filter.isEmpty()) {
+            condition.append(filter.get(0));
+            for (int i = 1; i < filter.size(); i++) {
+                condition.append(" AND " + filter.get(i));
+            }
+
+            sql = sql + " WHERE " + condition.toString();
+        }
+        System.out.println(sql);
+        try (Connection connection = DBConnection.getConnection();
+             Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery(sql)) {
+
+            while (resultSet.next()) {
+                Student student = createStudentFromResultSet(resultSet);
+                students.add(student);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return students;
+    }
+
+    public List<Student> searchStudent(String search) {
+        List<Student> students = new ArrayList<>();
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM Students WHERE studentid LIKE ? OR name LIKE ? OR email LIKE ? OR major LIKE ?")) {
+
+            preparedStatement.setString(1, "%"+search+"%");
+            preparedStatement.setString(2, "%"+search+"%");
+            preparedStatement.setString(3, "%"+search+"%");
+            preparedStatement.setString(4, "%"+search+"%");
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                while (resultSet.next()) {
+                    Student student = createStudentFromResultSet(resultSet);
+                    students.add(student);
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return students;
     }
 
     private Student createStudentFromResultSet(ResultSet resultSet) throws SQLException {
