@@ -46,12 +46,24 @@ public class FormStudentManagement extends JFrame{
     private JButton buttonSave;
     private JLabel image;
     private JButton buttonAdd;
+    private JPanel studentInfomation;
 
     private StudentController studentController;
-
+    private Account user;
     private byte[] StudentPictureData;
 
-    public FormStudentManagement() {
+    public FormStudentManagement(Account user) {
+        this.user = user;
+
+        if (user.getRole().equals("Employee")) {
+            importButton.setVisible(false);
+            buttonSave.setVisible(false);
+            buttonAdd.setVisible(false);
+            editButton.setVisible(false);
+            deleteButton.setVisible(false);
+            studentInfomation.setVisible(false);
+        }
+
         setTitle("Student Management Form");
         setSize(1080, 720);
         setLocationRelativeTo(null);
@@ -217,7 +229,7 @@ public class FormStudentManagement extends JFrame{
                 } else {
                     String studentID = String.valueOf(tableStudents.getValueAt(row, 1));
                     Student student = studentController.getStudentById(studentID);
-                    new FormDetailStudent(student).setVisible(true);
+                    new FormDetailStudent(student, user).setVisible(true);
                 }
             }
         });

@@ -54,7 +54,19 @@ public class FormDetailStudent extends JFrame{
     private boolean isEditing;
     private int currentId;
 
-    public FormDetailStudent(Student student) {
+    public FormDetailStudent(Student student, Account user) {
+        if (user.getRole().equals("Employee")) {
+            importButton.setVisible(false);
+            addButton.setVisible(false);
+            deleteButton.setVisible(false);
+            editButton.setVisible(false);
+            saveButton.setVisible(false);
+            textFieldTitle.setEnabled(false);
+            textFieldScore.setEnabled(false);
+            datePickerIssued.setEnabled(false);
+            datePickerExpiration.setEnabled(false);
+        }
+
         setTitle("Detail of " + student.getName());
         setSize(720, 720);
         setLocationRelativeTo(null);

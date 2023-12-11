@@ -5,6 +5,7 @@ import org.thd.Controllers.LoginHistoryController;
 import org.thd.Models.Account;
 import org.thd.Models.HistoryTableModel;
 import org.thd.Models.LoginHistory;
+import org.thd.Views.AccountManagement.FormAccountCRUD;
 import org.thd.Views.AccountManagement.FormUserSystem;
 import org.thd.Views.StudentManagement.FormStudentManagement;
 
@@ -33,6 +34,7 @@ public class FormMain extends JFrame{
     private JButton buttonStudent;
     private JButton logoutButton;
     private JTable tableLoginHistory;
+    private JScrollPane historyLogin;
 
     private Account user;
     private AccountController accountController;
@@ -56,6 +58,7 @@ public class FormMain extends JFrame{
 
         if (!user.getRole().equals("Admin")) {
             buttonUser.setVisible(false);
+            historyLogin.setVisible(false);
         }
 
         setTitle("Main Form");
@@ -84,7 +87,18 @@ public class FormMain extends JFrame{
         buttonStudent.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                new FormStudentManagement().setVisible(true);
+                new FormStudentManagement(user).setVisible(true);
+            }
+        });
+
+        logoutButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int confirm = JOptionPane.showConfirmDialog(FormMain.this, "Do you want to log out ?");
+                if (confirm == JOptionPane.YES_OPTION) {
+                    new FormLogin().setVisible(true);
+                    dispose();
+                }
             }
         });
     }
