@@ -9,30 +9,24 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class FormSearchNSort extends JFrame{
+public class FormSearch extends JFrame{
     private JPanel panelMain;
     private JTextField textFieldSearch;
     private JCheckBox maleCheckBox;
     private JCheckBox femaleCheckBox;
     private JComboBox comboBoxGPA;
     private JComboBox comboBoxTrainingPoint;
-    private JComboBox comboBoxSortByName;
     private JTable tableStudents;
-    private JComboBox comboBoxSortByID;
-    private JComboBox comboBoxSortByGPA;
-    private JComboBox comboBoxSortByPoint;
     private JButton applySortButton;
     private JButton buttonSearch;
     private StudentController studentController;
 
     private List<String> filter;
     private List<String> sort;
-    public FormSearchNSort() {
+    public FormSearch() {
         setTitle("Search Student Form");
         setSize(720, 720);
         setLocationRelativeTo(null);

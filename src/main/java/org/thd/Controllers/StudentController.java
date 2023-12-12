@@ -1,6 +1,5 @@
 package org.thd.Controllers;
 
-import org.thd.DAO.AccountDAO;
 import org.thd.DAO.StudentDAO;
 import org.thd.Models.Student;
 
@@ -32,7 +31,6 @@ public class StudentController {
     public boolean deleteStudent(String studentId) {
         return studentDAO.delete(studentId);
     }
-
     private List<Student> searchCriteria(List<String> filter, List<String> sort) {
         return studentDAO.searchCriteria(filter, sort);
     }

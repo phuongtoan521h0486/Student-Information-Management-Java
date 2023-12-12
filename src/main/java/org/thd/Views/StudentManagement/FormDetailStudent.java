@@ -24,7 +24,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.List;
 
 public class FormDetailStudent extends JFrame{
     private JPanel panelMain;

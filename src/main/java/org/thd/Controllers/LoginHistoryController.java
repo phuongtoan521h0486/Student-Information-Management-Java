@@ -12,7 +12,6 @@ public class LoginHistoryController {
         this.loginHistoryDAO = new LoginHistoryDAO();
     }
 
-    // Add a login history record
     public int addLoginHistory(LoginHistory loginHistory) {
         return loginHistoryDAO.add(loginHistory);
     }

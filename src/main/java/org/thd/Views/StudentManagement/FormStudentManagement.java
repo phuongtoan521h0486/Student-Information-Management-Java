@@ -148,6 +148,8 @@ public class FormStudentManagement extends JFrame{
                     Sheet sheet = workbook.createSheet("Students");
                     sheet.setColumnWidth(0, 6400);
 
+                    StudentTableModel model = new StudentTableModel(studentController.getAllStudents());
+
                     Row headerRow = sheet.createRow(0);
                     for (int i = 0; i < model.getColumnCount(); i++) {
                         Cell cell = headerRow.createCell(i);
@@ -198,7 +200,7 @@ public class FormStudentManagement extends JFrame{
         searchStudentsButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                new FormSearchNSort().setVisible(true);
+                new FormSearch().setVisible(true);
             }
         });
 

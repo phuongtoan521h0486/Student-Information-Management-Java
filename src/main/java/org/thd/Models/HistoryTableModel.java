@@ -1,8 +1,5 @@
 package org.thd.Models;
 
-import org.thd.Models.Account;
-import org.thd.Models.LoginHistory;
-
 import javax.swing.table.AbstractTableModel;
 import java.text.SimpleDateFormat;
 import java.util.List;

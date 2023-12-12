@@ -2,7 +2,6 @@ package org.thd.Views.AccountManagement;
 
 import org.thd.Components.ImageRenderer;
 import org.thd.Controllers.AccountController;
-import org.thd.Models.AccountTableModel;
 import org.thd.Models.UserTableModel;
 
 import javax.swing.*;

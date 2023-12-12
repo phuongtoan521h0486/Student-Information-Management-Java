@@ -8,9 +8,7 @@ public class Student {
     private String name;
     private boolean gender;
     private String major;
-
     private double gpa;
-
     private int trainingPoint;
     private byte[] picture;
 
