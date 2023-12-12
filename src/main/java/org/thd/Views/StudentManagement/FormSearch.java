@@ -20,7 +20,6 @@ public class FormSearch extends JFrame{
     private JComboBox comboBoxGPA;
     private JComboBox comboBoxTrainingPoint;
     private JTable tableStudents;
-    private JButton applySortButton;
     private JButton buttonSearch;
     private StudentController studentController;
 
@@ -37,14 +36,6 @@ public class FormSearch extends JFrame{
         textFieldSearch.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                StudentTableModel model = new StudentTableModel(studentController.searchStudent(textFieldSearch.getText()));
-                tableStudents.setModel(model);
-                tableStudents.getColumnModel().getColumn(0).setCellRenderer(new ImageRenderer(95, 140));
-            }
-        });
-        applySortButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
                 List<Student> students = studentController.searchStudent(textFieldSearch.getText());
 
                 StudentTableModel model = new StudentTableModel(getFilterCriteria(students));
@@ -55,7 +46,9 @@ public class FormSearch extends JFrame{
         buttonSearch.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                StudentTableModel model = new StudentTableModel(studentController.searchStudent(textFieldSearch.getText()));
+                List<Student> students = studentController.searchStudent(textFieldSearch.getText());
+
+                StudentTableModel model = new StudentTableModel(getFilterCriteria(students));
                 tableStudents.setModel(model);
                 tableStudents.getColumnModel().getColumn(0).setCellRenderer(new ImageRenderer(95, 140));
             }
