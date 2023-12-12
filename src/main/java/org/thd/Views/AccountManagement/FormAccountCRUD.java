@@ -142,7 +142,7 @@ public class FormAccountCRUD extends JFrame{
                         } else {
                             user.setStatus(true);
                         }
-                        accountController.updateAccount(user);
+                        accountController.updateAccountNoPassword(user);
                         AccountTableModel model = new AccountTableModel(accountController.getAllAccounts());
                         tableAccount.setModel(model);
                     }
