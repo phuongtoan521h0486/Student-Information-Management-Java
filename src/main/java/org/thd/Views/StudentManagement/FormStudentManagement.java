@@ -273,17 +273,69 @@ public class FormStudentManagement extends JFrame{
         buttonSave.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                String id = studentIDField.getText();
+                String email = studentEmail.getText();
+                String name = studentName.getText();
+                boolean gender = maleRadioButton.isSelected();
+                String studentMajor = major.getText();
+
+                if (id.isEmpty() || id == null || email.isEmpty() || email == null ||
+                        studentMajor.isEmpty() || studentMajor == null || name.isEmpty() || name == null
+                ) {
+                    JOptionPane.showMessageDialog(null, "Please submit enough valid information", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                if (!email.contains("@")) {
+                    JOptionPane.showMessageDialog(null, "Not valid Email", "Error", JOptionPane.ERROR_MESSAGE);
+                    studentEmail.setText("");
+                    return;
+                }
+
+                double gpa = 0;
+
+                if (studentGPA.getText().isEmpty() || studentGPA.getText() == null ) {
+                    JOptionPane.showMessageDialog(null, "Please submit enough valid information", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                else {
+                    try {
+                        gpa = Double.parseDouble(studentGPA.getText());
+                    } catch (NumberFormatException ex) {
+                        JOptionPane.showMessageDialog(null, "GPA must be numeric", "Error", JOptionPane.ERROR_MESSAGE);
+                        studentGPA.setText("");
+                        return;
+                    }
+                }
+
+                int point = 0;
+
+                if (studentPoint.getText().isEmpty() || studentPoint.getText() == null) {
+                    JOptionPane.showMessageDialog(null, "Please submit enough valid information", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                else {
+                    try {
+                        point = Integer.parseInt(studentPoint.getText());
+                    } catch (NumberFormatException ex) {
+                        JOptionPane.showMessageDialog(null, "Training Point must be numeric", "Error", JOptionPane.ERROR_MESSAGE);
+                        studentPoint.setText("");
+                        return;
+                    }
+                }
+
+
                 if (buttonSave.getText().equals("Save")) {
                     int confirm = JOptionPane.showConfirmDialog(FormStudentManagement.this, "You want to save this student");
                     if (confirm == JOptionPane.YES_OPTION) {
                         try {
-                            Student student = new Student(studentIDField.getText(),
-                                                            studentEmail.getText(),
-                                                            studentName.getText(),
-                                                            maleRadioButton.isSelected(),
-                                                            major.getText(),
-                                                            Double.parseDouble(studentGPA.getText()),
-                                                            Integer.parseInt(studentPoint.getText()),
+                            Student student = new Student(id,
+                                                            email,
+                                                            name,
+                                                            gender,
+                                                            studentMajor,
+                                                            gpa,
+                                                            point,
                                                             getImageBytes((ImageIcon)image.getIcon())
                                                             );
                             studentController.updateStudent(student);
@@ -372,6 +424,7 @@ public class FormStudentManagement extends JFrame{
             URL resource = classLoader.getResource("static/images/add-icon.png");
             BufferedImage img = ImageIO.read(resource);
             image.setIcon(new ImageIcon(img.getScaledInstance(64, 64, Image.SCALE_DEFAULT)));
+            StudentPictureData = null;
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -383,14 +436,50 @@ public class FormStudentManagement extends JFrame{
         String name = studentName.getText();
         boolean gender = maleRadioButton.isSelected();
         String studentMajor = major.getText();
-        String gpa = studentGPA.getText();
-        String point = studentPoint.getText();
 
         if (id.isEmpty() || id == null || email.isEmpty() || email == null ||
-                studentMajor.isEmpty() || studentMajor == null || name.isEmpty() || name == null ||
-                point.isEmpty() || point == null || gpa.isEmpty() || gpa == null) {
+                studentMajor.isEmpty() || studentMajor == null || name.isEmpty() || name == null
+                ) {
             JOptionPane.showMessageDialog(this, "Please submit enough valid information", "Error", JOptionPane.ERROR_MESSAGE);
             return;
+        }
+
+        if (!email.contains("@")) {
+            JOptionPane.showMessageDialog(this, "Not valid Email", "Error", JOptionPane.ERROR_MESSAGE);
+            studentEmail.setText("");
+            return;
+        }
+
+        double gpa = 0;
+
+        if (studentGPA.getText().isEmpty() || studentGPA.getText() == null ) {
+            JOptionPane.showMessageDialog(this, "Please submit enough valid information", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        else {
+            try {
+                gpa = Double.parseDouble(studentGPA.getText());
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(this, "GPA must be numeric", "Error", JOptionPane.ERROR_MESSAGE);
+                studentGPA.setText("");
+                return;
+            }
+        }
+
+        int point = 0;
+
+        if (studentPoint.getText().isEmpty() || studentPoint.getText() == null) {
+            JOptionPane.showMessageDialog(this, "Please submit enough valid information", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        else {
+            try {
+                point = Integer.parseInt(studentPoint.getText());
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(this, "Training Point must be numeric", "Error", JOptionPane.ERROR_MESSAGE);
+                studentPoint.setText("");
+                return;
+            }
         }
 
         Student existingStudent = studentController.getStudentById(id);
@@ -405,8 +494,8 @@ public class FormStudentManagement extends JFrame{
                                         name,
                                         gender,
                                         studentMajor,
-                                        Double.parseDouble(gpa),
-                                        Integer.parseInt(point),
+                                        gpa,
+                                        point,
                                         StudentPictureData
                                         );
         studentID = studentController.addStudent(student);
