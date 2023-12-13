@@ -183,7 +183,13 @@ public class FormAccountCRUD extends JFrame{
         saveButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                updateAccount();
+                int selectedRow = tableAccount.getSelectedRow();
+                if (selectedRow != -1) {
+                    updateAccount();
+                }
+                else {
+                    JOptionPane.showMessageDialog(null, "No thing to save", "Error", JOptionPane.ERROR_MESSAGE);
+                }
             }
         });
     }
