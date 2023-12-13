@@ -180,6 +180,10 @@ public class FormDetailStudent extends JFrame{
                     Workbook workbook = new XSSFWorkbook();
                     Sheet sheet = workbook.createSheet("Certificates");
 
+                    CertificateTableModel model = new CertificateTableModel(student.getStudentId());
+                    tableCertificates.setModel(model);
+                    tableCertificatesManagement.setModel(model);
+
                     Row headerRow = sheet.createRow(0);
                     for (int i = 0; i < model.getColumnCount(); i++) {
                         Cell cell = headerRow.createCell(i);

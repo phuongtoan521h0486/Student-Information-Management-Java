@@ -1,6 +1,7 @@
 package org.thd.Views.AccountManagement;
 
 import org.thd.Controllers.AccountController;
+import org.thd.Controllers.LoginHistoryController;
 import org.thd.Models.Account;
 import org.thd.Models.AccountTableModel;
 
@@ -40,6 +41,7 @@ public class FormAccountCRUD extends JFrame{
     private JButton backButton;
 
     private AccountController accountController;
+    private LoginHistoryController loginHistoryController;
     private byte[] pictureData;
 
     public FormAccountCRUD() {
@@ -49,6 +51,7 @@ public class FormAccountCRUD extends JFrame{
         setLocationRelativeTo(null);
 
         accountController = new AccountController();
+        loginHistoryController = new LoginHistoryController();
         AccountTableModel model = new AccountTableModel(accountController.getAllAccounts());
         tableAccount.setModel(model);
 
@@ -119,6 +122,7 @@ public class FormAccountCRUD extends JFrame{
                     int confirm = JOptionPane.showConfirmDialog(FormAccountCRUD.this, "You want to delete this user");
                     if (confirm == JOptionPane.YES_OPTION) {
                         int userID = Integer.parseInt(String.valueOf(tableAccount.getValueAt(row, 0)));
+                        loginHistoryController.deleteLoginHistoryByAccountId(userID);
                         accountController.deleteAccount(userID);
                         AccountTableModel model = new AccountTableModel(accountController.getAllAccounts());
                         tableAccount.setModel(model);

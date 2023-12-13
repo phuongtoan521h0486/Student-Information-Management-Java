@@ -123,6 +123,22 @@ public class LoginHistoryDAO implements Repository<LoginHistory, Integer> {
         return false;
     }
 
+    public boolean deleteByAccountId(Integer accountId) {
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(
+                     "DELETE FROM login_history WHERE account_id=?")) {
+
+            preparedStatement.setInt(1, accountId);
+
+            int rowsAffected = preparedStatement.executeUpdate();
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
     private LoginHistory resultSetToLoginHistory(ResultSet resultSet) throws SQLException {
         LoginHistory loginHistory = new LoginHistory();
         loginHistory.setId(resultSet.getInt("id"));

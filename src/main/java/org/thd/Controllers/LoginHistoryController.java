@@ -31,4 +31,8 @@ public class LoginHistoryController {
     public boolean deleteLoginHistoryById(int id) {
         return loginHistoryDAO.delete(id);
     }
+
+    public boolean deleteLoginHistoryByAccountId(int id) {
+        return loginHistoryDAO.deleteByAccountId(id);
+    }
 }
