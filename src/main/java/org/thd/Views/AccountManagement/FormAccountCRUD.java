@@ -328,6 +328,10 @@ public class FormAccountCRUD extends JFrame{
             return;
         }
 
+        if (id == 1) {
+            role ="Admin";
+        }
+
         Account editAccount = new Account(id, username, password, role, pictureData, name, age, phoneNumber, true);
         boolean isUpdate = true;
 
